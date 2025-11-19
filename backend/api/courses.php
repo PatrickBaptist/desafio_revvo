@@ -57,6 +57,16 @@ if ($method === 'PUT') {
   }
 
   $id = $_GET['id'];
+
+  $check = $pdo->prepare("SELECT id FROM slideshow WHERE id = ?");
+  $check->execute([$id]);
+
+  if ($check->rowCount() === 0) {
+      http_response_code(404);
+      echo json_encode(['error' => 'ID não encontrado']);
+      exit;
+  }
+
   $title = $input['title'] ?? '';
   $description = $input['description'] ?? '';
 
@@ -72,6 +82,16 @@ if ($method === 'DELETE') {
     http_response_code(400);
     echo json_encode(['error'=>'ID é obrigatório']);
     exit;
+  }
+
+  $id = $_GET['id'];
+  $check = $pdo->prepare("SELECT id FROM slideshow WHERE id = ?");
+  $check->execute([$id]);
+
+  if ($check->rowCount() === 0) {
+      http_response_code(404);
+      echo json_encode(['error' => 'ID não encontrado']);
+      exit;
   }
 
   $stmt = $pdo->prepare("DELETE FROM courses WHERE id = ?");
